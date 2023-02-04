@@ -3,8 +3,8 @@ import os
 import random
 import numpy as np
 import torch
-# import gymnasium as gym
-import gym
+import gymnasium as gym
+# import gym
 from distutils.util import strtobool
 from torch.utils.tensorboard import SummaryWriter
 import time
@@ -96,3 +96,17 @@ if __name__ == "__main__":
 
   device = torch.device(
       "cuda" if torch.cuda.is_available() and args.cuda else "cpu")
+
+  env = gym.make("CartPole-v1", render_mode="rgb_array")
+  env = gym.wrappers.RecordEpisodeStatistics(env)
+  env = gym.wrappers.RecordVideo(env,
+                                 'videos',
+                                 step_trigger=lambda t: t % 100 == 0)
+  observation = env.reset()
+  for _ in range(200):
+    action = env.action_space.sample()
+    observation, reward, done, truncated, info = env.step(action)
+    if done or truncated:
+      observation = env.reset()
+      print(f"episodic return: {info['episode']}")
+  env.close()
