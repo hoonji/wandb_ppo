@@ -1,0 +1,1994 @@
+diff --git a/flutter/mood_journal_flutter/android/app/build.gradle b/flutter/mood_journal_flutter/android/app/build.gradle
+index 820e5ab..6a5c57d 100644
+--- a/flutter/mood_journal_flutter/android/app/build.gradle
++++ b/flutter/mood_journal_flutter/android/app/build.gradle
+@@ -29,7 +29,7 @@ apply plugin: 'kotlin-android'
+ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
+ 
+ android {
+-    compileSdkVersion 30
++    compileSdkVersion 31
+ 
+     sourceSets {
+         main.java.srcDirs += 'src/main/kotlin'
+@@ -38,8 +38,8 @@ android {
+     defaultConfig {
+         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+         applicationId "com.example.mood_journal_flutter"
+-        minSdkVersion 16
+-        targetSdkVersion 30
++        minSdkVersion 19
++        targetSdkVersion 31
+         versionCode flutterVersionCode.toInteger()
+         versionName flutterVersionName
+     }
+diff --git a/flutter/mood_journal_flutter/android/app/src/debug/AndroidManifest.xml b/flutter/mood_journal_flutter/android/app/src/debug/AndroidManifest.xml
+index 928a598..171651c 100644
+--- a/flutter/mood_journal_flutter/android/app/src/debug/AndroidManifest.xml
++++ b/flutter/mood_journal_flutter/android/app/src/debug/AndroidManifest.xml
+@@ -1,7 +1,11 @@
+ <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+     package="com.example.mood_journal_flutter">
++    <!-- <application android:label="mood_journal_flutter"
++    android:name="com.example.mood_journal_flutter" -->
++    <!-- /> -->
+     <!-- Flutter needs it to communicate with the running application
+          to allow setting breakpoints, to provide hot reload, etc.
+     -->
+     <uses-permission android:name="android.permission.INTERNET"/>
++    <!-- <activity android:name="com.example.mood_journal_flutter.MainActivity" android:exported="false" /> -->
+ </manifest>
+diff --git a/flutter/mood_journal_flutter/android/app/src/main/AndroidManifest.xml b/flutter/mood_journal_flutter/android/app/src/main/AndroidManifest.xml
+index f531262..da7c7e4 100644
+--- a/flutter/mood_journal_flutter/android/app/src/main/AndroidManifest.xml
++++ b/flutter/mood_journal_flutter/android/app/src/main/AndroidManifest.xml
+@@ -2,13 +2,16 @@
+     package="com.example.mood_journal_flutter">
+    <application
+         android:label="mood_journal_flutter"
+-        android:icon="@mipmap/ic_launcher">
++        android:icon="@mipmap/ic_launcher"
++        android:name="${applicationName}"
++        >
+         <activity
+             android:name=".MainActivity"
+             android:launchMode="singleTop"
+             android:theme="@style/LaunchTheme"
+             android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+             android:hardwareAccelerated="true"
++            android:exported="true"
+             android:windowSoftInputMode="adjustResize">
+             <!-- Specifies an Android theme to apply to this Activity as soon as
+                  the Android process has started. This theme is visible to the user
+diff --git a/flutter/mood_journal_flutter/android/build.gradle b/flutter/mood_journal_flutter/android/build.gradle
+index 8ce48b0..c89c912 100644
+--- a/flutter/mood_journal_flutter/android/build.gradle
++++ b/flutter/mood_journal_flutter/android/build.gradle
+@@ -1,14 +1,14 @@
+ buildscript {
+-    ext.kotlin_version = '1.3.50'
++    ext.kotlin_version = '1.7.20'
+     repositories {
+         google()
+         jcenter()
+     }
+ 
+     dependencies {
+-        classpath 'com.android.tools.build:gradle:4.1.0'
++        classpath 'com.android.tools.build:gradle:7.1.2'
+         // START: FlutterFire Configuration
+-        classpath 'com.google.gms:google-services:4.3.10'
++        classpath 'com.google.gms:google-services:4.3.14'
+         // END: FlutterFire Configuration
+         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+     }
+diff --git a/flutter/mood_journal_flutter/android/gradle/wrapper/gradle-wrapper.properties b/flutter/mood_journal_flutter/android/gradle/wrapper/gradle-wrapper.properties
+index bc6a58a..cc5527d 100644
+--- a/flutter/mood_journal_flutter/android/gradle/wrapper/gradle-wrapper.properties
++++ b/flutter/mood_journal_flutter/android/gradle/wrapper/gradle-wrapper.properties
+@@ -3,4 +3,4 @@ distributionBase=GRADLE_USER_HOME
+ distributionPath=wrapper/dists
+ zipStoreBase=GRADLE_USER_HOME
+ zipStorePath=wrapper/dists
+-distributionUrl=https\://services.gradle.org/distributions/gradle-6.7-all.zip
++distributionUrl=https\://services.gradle.org/distributions/gradle-7.4-all.zip
+diff --git a/flutter/mood_journal_flutter/ios/Flutter/AppFrameworkInfo.plist b/flutter/mood_journal_flutter/ios/Flutter/AppFrameworkInfo.plist
+index 8d4492f..9625e10 100644
+--- a/flutter/mood_journal_flutter/ios/Flutter/AppFrameworkInfo.plist
++++ b/flutter/mood_journal_flutter/ios/Flutter/AppFrameworkInfo.plist
+@@ -21,6 +21,6 @@
+   <key>CFBundleVersion</key>
+   <string>1.0</string>
+   <key>MinimumOSVersion</key>
+-  <string>9.0</string>
++  <string>11.0</string>
+ </dict>
+ </plist>
+diff --git a/flutter/mood_journal_flutter/ios/Podfile b/flutter/mood_journal_flutter/ios/Podfile
+index 748922d..13a2177 100644
+--- a/flutter/mood_journal_flutter/ios/Podfile
++++ b/flutter/mood_journal_flutter/ios/Podfile
+@@ -28,7 +28,8 @@ require File.expand_path(File.join('packages', 'flutter_tools', 'bin', 'podhelpe
+ flutter_ios_podfile_setup
+ 
+ target 'Runner' do
+-  # pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :branch => 'main'
++  # pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '9.5.0-1'
++  pod 'FirebaseFirestore', :git => 'https://github.com/invertase/firestore-ios-sdk-frameworks.git', :tag => '10.3.0'
+   use_frameworks!
+   use_modular_headers!
+ 
+diff --git a/flutter/mood_journal_flutter/ios/Podfile.lock b/flutter/mood_journal_flutter/ios/Podfile.lock
+index 75424a2..d8bbc61 100644
+--- a/flutter/mood_journal_flutter/ios/Podfile.lock
++++ b/flutter/mood_journal_flutter/ios/Podfile.lock
+@@ -1,770 +1,150 @@
+ PODS:
+-  - abseil/algorithm (1.20211102.0):
+-    - abseil/algorithm/algorithm (= 1.20211102.0)
+-    - abseil/algorithm/container (= 1.20211102.0)
+-  - abseil/algorithm/algorithm (1.20211102.0):
+-    - abseil/base/config
+-  - abseil/algorithm/container (1.20211102.0):
+-    - abseil/algorithm/algorithm
+-    - abseil/base/core_headers
+-    - abseil/meta/type_traits
+-  - abseil/base (1.20211102.0):
+-    - abseil/base/atomic_hook (= 1.20211102.0)
+-    - abseil/base/base (= 1.20211102.0)
+-    - abseil/base/base_internal (= 1.20211102.0)
+-    - abseil/base/config (= 1.20211102.0)
+-    - abseil/base/core_headers (= 1.20211102.0)
+-    - abseil/base/dynamic_annotations (= 1.20211102.0)
+-    - abseil/base/endian (= 1.20211102.0)
+-    - abseil/base/errno_saver (= 1.20211102.0)
+-    - abseil/base/fast_type_id (= 1.20211102.0)
+-    - abseil/base/log_severity (= 1.20211102.0)
+-    - abseil/base/malloc_internal (= 1.20211102.0)
+-    - abseil/base/pretty_function (= 1.20211102.0)
+-    - abseil/base/raw_logging_internal (= 1.20211102.0)
+-    - abseil/base/spinlock_wait (= 1.20211102.0)
+-    - abseil/base/strerror (= 1.20211102.0)
+-    - abseil/base/throw_delegate (= 1.20211102.0)
+-  - abseil/base/atomic_hook (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-  - abseil/base/base (1.20211102.0):
+-    - abseil/base/atomic_hook
+-    - abseil/base/base_internal
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/dynamic_annotations
+-    - abseil/base/log_severity
+-    - abseil/base/raw_logging_internal
+-    - abseil/base/spinlock_wait
+-    - abseil/meta/type_traits
+-  - abseil/base/base_internal (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/meta/type_traits
+-  - abseil/base/config (1.20211102.0)
+-  - abseil/base/core_headers (1.20211102.0):
+-    - abseil/base/config
+-  - abseil/base/dynamic_annotations (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-  - abseil/base/endian (1.20211102.0):
+-    - abseil/base/base
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-  - abseil/base/errno_saver (1.20211102.0):
+-    - abseil/base/config
+-  - abseil/base/fast_type_id (1.20211102.0):
+-    - abseil/base/config
+-  - abseil/base/log_severity (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-  - abseil/base/malloc_internal (1.20211102.0):
+-    - abseil/base/base
+-    - abseil/base/base_internal
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/dynamic_annotations
+-    - abseil/base/raw_logging_internal
+-  - abseil/base/pretty_function (1.20211102.0)
+-  - abseil/base/raw_logging_internal (1.20211102.0):
+-    - abseil/base/atomic_hook
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/log_severity
+-  - abseil/base/spinlock_wait (1.20211102.0):
+-    - abseil/base/base_internal
+-    - abseil/base/core_headers
+-    - abseil/base/errno_saver
+-  - abseil/base/strerror (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/errno_saver
+-  - abseil/base/throw_delegate (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/raw_logging_internal
+-  - abseil/container/common (1.20211102.0):
+-    - abseil/meta/type_traits
+-    - abseil/types/optional
+-  - abseil/container/compressed_tuple (1.20211102.0):
+-    - abseil/utility/utility
+-  - abseil/container/container_memory (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/memory/memory
+-    - abseil/meta/type_traits
+-    - abseil/utility/utility
+-  - abseil/container/fixed_array (1.20211102.0):
+-    - abseil/algorithm/algorithm
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/dynamic_annotations
+-    - abseil/base/throw_delegate
+-    - abseil/container/compressed_tuple
+-    - abseil/memory/memory
+-  - abseil/container/flat_hash_map (1.20211102.0):
+-    - abseil/algorithm/container
+-    - abseil/container/container_memory
+-    - abseil/container/hash_function_defaults
+-    - abseil/container/raw_hash_map
+-    - abseil/memory/memory
+-  - abseil/container/hash_function_defaults (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/hash/hash
+-    - abseil/strings/cord
+-    - abseil/strings/strings
+-  - abseil/container/hash_policy_traits (1.20211102.0):
+-    - abseil/meta/type_traits
+-  - abseil/container/hashtable_debug_hooks (1.20211102.0):
+-    - abseil/base/config
+-  - abseil/container/hashtablez_sampler (1.20211102.0):
+-    - abseil/base/base
+-    - abseil/base/core_headers
+-    - abseil/container/have_sse
+-    - abseil/debugging/stacktrace
+-    - abseil/memory/memory
+-    - abseil/profiling/exponential_biased
+-    - abseil/profiling/sample_recorder
+-    - abseil/synchronization/synchronization
+-    - abseil/utility/utility
+-  - abseil/container/have_sse (1.20211102.0)
+-  - abseil/container/inlined_vector (1.20211102.0):
+-    - abseil/algorithm/algorithm
+-    - abseil/base/core_headers
+-    - abseil/base/throw_delegate
+-    - abseil/container/inlined_vector_internal
+-    - abseil/memory/memory
+-  - abseil/container/inlined_vector_internal (1.20211102.0):
+-    - abseil/base/core_headers
+-    - abseil/container/compressed_tuple
+-    - abseil/memory/memory
+-    - abseil/meta/type_traits
+-    - abseil/types/span
+-  - abseil/container/layout (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/meta/type_traits
+-    - abseil/strings/strings
+-    - abseil/types/span
+-    - abseil/utility/utility
+-  - abseil/container/raw_hash_map (1.20211102.0):
+-    - abseil/base/throw_delegate
+-    - abseil/container/container_memory
+-    - abseil/container/raw_hash_set
+-  - abseil/container/raw_hash_set (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/endian
+-    - abseil/container/common
+-    - abseil/container/compressed_tuple
+-    - abseil/container/container_memory
+-    - abseil/container/hash_policy_traits
+-    - abseil/container/hashtable_debug_hooks
+-    - abseil/container/hashtablez_sampler
+-    - abseil/container/have_sse
+-    - abseil/memory/memory
+-    - abseil/meta/type_traits
+-    - abseil/numeric/bits
+-    - abseil/utility/utility
+-  - abseil/debugging/debugging_internal (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/dynamic_annotations
+-    - abseil/base/errno_saver
+-    - abseil/base/raw_logging_internal
+-  - abseil/debugging/demangle_internal (1.20211102.0):
+-    - abseil/base/base
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-  - abseil/debugging/stacktrace (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/debugging/debugging_internal
+-  - abseil/debugging/symbolize (1.20211102.0):
+-    - abseil/base/base
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/dynamic_annotations
+-    - abseil/base/malloc_internal
+-    - abseil/base/raw_logging_internal
+-    - abseil/debugging/debugging_internal
+-    - abseil/debugging/demangle_internal
+-    - abseil/strings/strings
+-  - abseil/functional/bind_front (1.20211102.0):
+-    - abseil/base/base_internal
+-    - abseil/container/compressed_tuple
+-    - abseil/meta/type_traits
+-    - abseil/utility/utility
+-  - abseil/functional/function_ref (1.20211102.0):
+-    - abseil/base/base_internal
+-    - abseil/base/core_headers
+-    - abseil/meta/type_traits
+-  - abseil/hash/city (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/endian
+-  - abseil/hash/hash (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/endian
+-    - abseil/container/fixed_array
+-    - abseil/hash/city
+-    - abseil/hash/low_level_hash
+-    - abseil/meta/type_traits
+-    - abseil/numeric/int128
+-    - abseil/strings/strings
+-    - abseil/types/optional
+-    - abseil/types/variant
+-    - abseil/utility/utility
+-  - abseil/hash/low_level_hash (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/endian
+-    - abseil/numeric/bits
+-    - abseil/numeric/int128
+-  - abseil/memory (1.20211102.0):
+-    - abseil/memory/memory (= 1.20211102.0)
+-  - abseil/memory/memory (1.20211102.0):
+-    - abseil/base/core_headers
+-    - abseil/meta/type_traits
+-  - abseil/meta (1.20211102.0):
+-    - abseil/meta/type_traits (= 1.20211102.0)
+-  - abseil/meta/type_traits (1.20211102.0):
+-    - abseil/base/config
+-  - abseil/numeric/bits (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-  - abseil/numeric/int128 (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/numeric/bits
+-  - abseil/numeric/representation (1.20211102.0):
+-    - abseil/base/config
+-  - abseil/profiling/exponential_biased (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-  - abseil/profiling/sample_recorder (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/synchronization/synchronization
+-    - abseil/time/time
+-  - abseil/random/distributions (1.20211102.0):
+-    - abseil/base/base_internal
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/meta/type_traits
+-    - abseil/numeric/bits
+-    - abseil/random/internal/distribution_caller
+-    - abseil/random/internal/fast_uniform_bits
+-    - abseil/random/internal/fastmath
+-    - abseil/random/internal/generate_real
+-    - abseil/random/internal/iostream_state_saver
+-    - abseil/random/internal/traits
+-    - abseil/random/internal/uniform_helper
+-    - abseil/random/internal/wide_multiply
+-    - abseil/strings/strings
+-  - abseil/random/internal/distribution_caller (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/fast_type_id
+-    - abseil/utility/utility
+-  - abseil/random/internal/fast_uniform_bits (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/meta/type_traits
+-  - abseil/random/internal/fastmath (1.20211102.0):
+-    - abseil/numeric/bits
+-  - abseil/random/internal/generate_real (1.20211102.0):
+-    - abseil/meta/type_traits
+-    - abseil/numeric/bits
+-    - abseil/random/internal/fastmath
+-    - abseil/random/internal/traits
+-  - abseil/random/internal/iostream_state_saver (1.20211102.0):
+-    - abseil/meta/type_traits
+-    - abseil/numeric/int128
+-  - abseil/random/internal/nonsecure_base (1.20211102.0):
+-    - abseil/base/core_headers
+-    - abseil/meta/type_traits
+-    - abseil/random/internal/pool_urbg
+-    - abseil/random/internal/salted_seed_seq
+-    - abseil/random/internal/seed_material
+-    - abseil/types/optional
+-    - abseil/types/span
+-  - abseil/random/internal/pcg_engine (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/meta/type_traits
+-    - abseil/numeric/bits
+-    - abseil/numeric/int128
+-    - abseil/random/internal/fastmath
+-    - abseil/random/internal/iostream_state_saver
+-  - abseil/random/internal/platform (1.20211102.0):
+-    - abseil/base/config
+-  - abseil/random/internal/pool_urbg (1.20211102.0):
+-    - abseil/base/base
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/endian
+-    - abseil/base/raw_logging_internal
+-    - abseil/random/internal/randen
+-    - abseil/random/internal/seed_material
+-    - abseil/random/internal/traits
+-    - abseil/random/seed_gen_exception
+-    - abseil/types/span
+-  - abseil/random/internal/randen (1.20211102.0):
+-    - abseil/base/raw_logging_internal
+-    - abseil/random/internal/platform
+-    - abseil/random/internal/randen_hwaes
+-    - abseil/random/internal/randen_slow
+-  - abseil/random/internal/randen_engine (1.20211102.0):
+-    - abseil/base/endian
+-    - abseil/meta/type_traits
+-    - abseil/random/internal/iostream_state_saver
+-    - abseil/random/internal/randen
+-  - abseil/random/internal/randen_hwaes (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/random/internal/platform
+-    - abseil/random/internal/randen_hwaes_impl
+-  - abseil/random/internal/randen_hwaes_impl (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/numeric/int128
+-    - abseil/random/internal/platform
+-  - abseil/random/internal/randen_slow (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/endian
+-    - abseil/numeric/int128
+-    - abseil/random/internal/platform
+-  - abseil/random/internal/salted_seed_seq (1.20211102.0):
+-    - abseil/container/inlined_vector
+-    - abseil/meta/type_traits
+-    - abseil/random/internal/seed_material
+-    - abseil/types/optional
+-    - abseil/types/span
+-  - abseil/random/internal/seed_material (1.20211102.0):
+-    - abseil/base/core_headers
+-    - abseil/base/dynamic_annotations
+-    - abseil/base/raw_logging_internal
+-    - abseil/random/internal/fast_uniform_bits
+-    - abseil/strings/strings
+-    - abseil/types/optional
+-    - abseil/types/span
+-  - abseil/random/internal/traits (1.20211102.0):
+-    - abseil/base/config
+-  - abseil/random/internal/uniform_helper (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/meta/type_traits
+-    - abseil/random/internal/traits
+-  - abseil/random/internal/wide_multiply (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/numeric/bits
+-    - abseil/numeric/int128
+-    - abseil/random/internal/traits
+-  - abseil/random/random (1.20211102.0):
+-    - abseil/random/distributions
+-    - abseil/random/internal/nonsecure_base
+-    - abseil/random/internal/pcg_engine
+-    - abseil/random/internal/pool_urbg
+-    - abseil/random/internal/randen_engine
+-    - abseil/random/seed_sequences
+-  - abseil/random/seed_gen_exception (1.20211102.0):
+-    - abseil/base/config
+-  - abseil/random/seed_sequences (1.20211102.0):
+-    - abseil/container/inlined_vector
+-    - abseil/random/internal/nonsecure_base
+-    - abseil/random/internal/pool_urbg
+-    - abseil/random/internal/salted_seed_seq
+-    - abseil/random/internal/seed_material
+-    - abseil/random/seed_gen_exception
+-    - abseil/types/span
+-  - abseil/status/status (1.20211102.0):
+-    - abseil/base/atomic_hook
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/raw_logging_internal
+-    - abseil/container/inlined_vector
+-    - abseil/debugging/stacktrace
+-    - abseil/debugging/symbolize
+-    - abseil/functional/function_ref
+-    - abseil/strings/cord
+-    - abseil/strings/str_format
+-    - abseil/strings/strings
+-    - abseil/types/optional
+-  - abseil/status/statusor (1.20211102.0):
+-    - abseil/base/base
+-    - abseil/base/core_headers
+-    - abseil/base/raw_logging_internal
+-    - abseil/meta/type_traits
+-    - abseil/status/status
+-    - abseil/strings/strings
+-    - abseil/types/variant
+-    - abseil/utility/utility
+-  - abseil/strings/cord (1.20211102.0):
+-    - abseil/base/base
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/endian
+-    - abseil/base/raw_logging_internal
+-    - abseil/container/fixed_array
+-    - abseil/container/inlined_vector
+-    - abseil/functional/function_ref
+-    - abseil/meta/type_traits
+-    - abseil/strings/cord_internal
+-    - abseil/strings/cordz_functions
+-    - abseil/strings/cordz_info
+-    - abseil/strings/cordz_statistics
+-    - abseil/strings/cordz_update_scope
+-    - abseil/strings/cordz_update_tracker
+-    - abseil/strings/internal
+-    - abseil/strings/str_format
+-    - abseil/strings/strings
+-    - abseil/types/optional
+-  - abseil/strings/cord_internal (1.20211102.0):
+-    - abseil/base/base_internal
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/endian
+-    - abseil/base/raw_logging_internal
+-    - abseil/base/throw_delegate
+-    - abseil/container/compressed_tuple
+-    - abseil/container/inlined_vector
+-    - abseil/container/layout
+-    - abseil/functional/function_ref
+-    - abseil/meta/type_traits
+-    - abseil/strings/strings
+-    - abseil/types/span
+-  - abseil/strings/cordz_functions (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/raw_logging_internal
+-    - abseil/profiling/exponential_biased
+-  - abseil/strings/cordz_handle (1.20211102.0):
+-    - abseil/base/base
+-    - abseil/base/config
+-    - abseil/base/raw_logging_internal
+-    - abseil/synchronization/synchronization
+-  - abseil/strings/cordz_info (1.20211102.0):
+-    - abseil/base/base
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/raw_logging_internal
+-    - abseil/container/inlined_vector
+-    - abseil/debugging/stacktrace
+-    - abseil/strings/cord_internal
+-    - abseil/strings/cordz_functions
+-    - abseil/strings/cordz_handle
+-    - abseil/strings/cordz_statistics
+-    - abseil/strings/cordz_update_tracker
+-    - abseil/synchronization/synchronization
+-    - abseil/types/span
+-  - abseil/strings/cordz_statistics (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/strings/cordz_update_tracker
+-  - abseil/strings/cordz_update_scope (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/strings/cord_internal
+-    - abseil/strings/cordz_info
+-    - abseil/strings/cordz_update_tracker
+-  - abseil/strings/cordz_update_tracker (1.20211102.0):
+-    - abseil/base/config
+-  - abseil/strings/internal (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/endian
+-    - abseil/base/raw_logging_internal
+-    - abseil/meta/type_traits
+-  - abseil/strings/str_format (1.20211102.0):
+-    - abseil/strings/str_format_internal
+-  - abseil/strings/str_format_internal (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/functional/function_ref
+-    - abseil/meta/type_traits
+-    - abseil/numeric/bits
+-    - abseil/numeric/int128
+-    - abseil/numeric/representation
+-    - abseil/strings/strings
+-    - abseil/types/optional
+-    - abseil/types/span
+-  - abseil/strings/strings (1.20211102.0):
+-    - abseil/base/base
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/endian
+-    - abseil/base/raw_logging_internal
+-    - abseil/base/throw_delegate
+-    - abseil/memory/memory
+-    - abseil/meta/type_traits
+-    - abseil/numeric/bits
+-    - abseil/numeric/int128
+-    - abseil/strings/internal
+-  - abseil/synchronization/graphcycles_internal (1.20211102.0):
+-    - abseil/base/base
+-    - abseil/base/base_internal
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/malloc_internal
+-    - abseil/base/raw_logging_internal
+-  - abseil/synchronization/kernel_timeout_internal (1.20211102.0):
+-    - abseil/base/core_headers
+-    - abseil/base/raw_logging_internal
+-    - abseil/time/time
+-  - abseil/synchronization/synchronization (1.20211102.0):
+-    - abseil/base/atomic_hook
+-    - abseil/base/base
+-    - abseil/base/base_internal
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/dynamic_annotations
+-    - abseil/base/malloc_internal
+-    - abseil/base/raw_logging_internal
+-    - abseil/debugging/stacktrace
+-    - abseil/debugging/symbolize
+-    - abseil/synchronization/graphcycles_internal
+-    - abseil/synchronization/kernel_timeout_internal
+-    - abseil/time/time
+-  - abseil/time (1.20211102.0):
+-    - abseil/time/internal (= 1.20211102.0)
+-    - abseil/time/time (= 1.20211102.0)
+-  - abseil/time/internal (1.20211102.0):
+-    - abseil/time/internal/cctz (= 1.20211102.0)
+-  - abseil/time/internal/cctz (1.20211102.0):
+-    - abseil/time/internal/cctz/civil_time (= 1.20211102.0)
+-    - abseil/time/internal/cctz/time_zone (= 1.20211102.0)
+-  - abseil/time/internal/cctz/civil_time (1.20211102.0):
+-    - abseil/base/config
+-  - abseil/time/internal/cctz/time_zone (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/time/internal/cctz/civil_time
+-  - abseil/time/time (1.20211102.0):
+-    - abseil/base/base
+-    - abseil/base/core_headers
+-    - abseil/base/raw_logging_internal
+-    - abseil/numeric/int128
+-    - abseil/strings/strings
+-    - abseil/time/internal/cctz/civil_time
+-    - abseil/time/internal/cctz/time_zone
+-  - abseil/types (1.20211102.0):
+-    - abseil/types/any (= 1.20211102.0)
+-    - abseil/types/bad_any_cast (= 1.20211102.0)
+-    - abseil/types/bad_any_cast_impl (= 1.20211102.0)
+-    - abseil/types/bad_optional_access (= 1.20211102.0)
+-    - abseil/types/bad_variant_access (= 1.20211102.0)
+-    - abseil/types/compare (= 1.20211102.0)
+-    - abseil/types/optional (= 1.20211102.0)
+-    - abseil/types/span (= 1.20211102.0)
+-    - abseil/types/variant (= 1.20211102.0)
+-  - abseil/types/any (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/base/fast_type_id
+-    - abseil/meta/type_traits
+-    - abseil/types/bad_any_cast
+-    - abseil/utility/utility
+-  - abseil/types/bad_any_cast (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/types/bad_any_cast_impl
+-  - abseil/types/bad_any_cast_impl (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/raw_logging_internal
+-  - abseil/types/bad_optional_access (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/raw_logging_internal
+-  - abseil/types/bad_variant_access (1.20211102.0):
+-    - abseil/base/config
+-    - abseil/base/raw_logging_internal
+-  - abseil/types/compare (1.20211102.0):
+-    - abseil/base/core_headers
+-    - abseil/meta/type_traits
+-  - abseil/types/optional (1.20211102.0):
+-    - abseil/base/base_internal
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/memory/memory
+-    - abseil/meta/type_traits
+-    - abseil/types/bad_optional_access
+-    - abseil/utility/utility
+-  - abseil/types/span (1.20211102.0):
+-    - abseil/algorithm/algorithm
+-    - abseil/base/core_headers
+-    - abseil/base/throw_delegate
+-    - abseil/meta/type_traits
+-  - abseil/types/variant (1.20211102.0):
+-    - abseil/base/base_internal
+-    - abseil/base/config
+-    - abseil/base/core_headers
+-    - abseil/meta/type_traits
+-    - abseil/types/bad_variant_access
+-    - abseil/utility/utility
+-  - abseil/utility/utility (1.20211102.0):
+-    - abseil/base/base_internal
+-    - abseil/base/config
+-    - abseil/meta/type_traits
+-  - BoringSSL-GRPC (0.0.24):
+-    - BoringSSL-GRPC/Implementation (= 0.0.24)
+-    - BoringSSL-GRPC/Interface (= 0.0.24)
+-  - BoringSSL-GRPC/Implementation (0.0.24):
+-    - BoringSSL-GRPC/Interface (= 0.0.24)
+-  - BoringSSL-GRPC/Interface (0.0.24)
+-  - cloud_firestore (3.2.1):
+-    - Firebase/Firestore (= 9.2.0)
++  - AppAuth (1.6.0):
++    - AppAuth/Core (= 1.6.0)
++    - AppAuth/ExternalUserAgent (= 1.6.0)
++  - AppAuth/Core (1.6.0)
++  - AppAuth/ExternalUserAgent (1.6.0):
++    - AppAuth/Core
++  - cloud_firestore (4.3.0):
++    - Firebase/Firestore (= 10.3.0)
+     - firebase_core
+     - Flutter
+-  - Firebase/CoreOnly (9.2.0):
+-    - FirebaseCore (= 9.2.0)
+-  - Firebase/Firestore (9.2.0):
++    - nanopb (< 2.30910.0, >= 2.30908.0)
++  - Firebase/Auth (10.3.0):
++    - Firebase/CoreOnly
++    - FirebaseAuth (~> 10.3.0)
++  - Firebase/CoreOnly (10.3.0):
++    - FirebaseCore (= 10.3.0)
++  - Firebase/Firestore (10.3.0):
+     - Firebase/CoreOnly
+-    - FirebaseFirestore (~> 9.2.0)
+-  - firebase_core (1.19.1):
+-    - Firebase/CoreOnly (= 9.2.0)
++    - FirebaseFirestore (~> 10.3.0)
++  - firebase_auth (4.2.3):
++    - Firebase/Auth (= 10.3.0)
++    - firebase_core
+     - Flutter
+-  - FirebaseCore (9.2.0):
+-    - FirebaseCoreDiagnostics (~> 9.0)
+-    - FirebaseCoreInternal (~> 9.0)
+-    - GoogleUtilities/Environment (~> 7.7)
+-    - GoogleUtilities/Logger (~> 7.7)
+-  - FirebaseCoreDiagnostics (9.2.0):
+-    - GoogleDataTransport (< 10.0.0, >= 9.1.4)
+-    - GoogleUtilities/Environment (~> 7.7)
+-    - GoogleUtilities/Logger (~> 7.7)
+-    - nanopb (< 2.30910.0, >= 2.30908.0)
+-  - FirebaseCoreInternal (9.2.0):
+-    - "GoogleUtilities/NSData+zlib (~> 7.7)"
+-  - FirebaseFirestore (9.2.0):
+-    - abseil/algorithm (~> 1.20211102.0)
+-    - abseil/base (~> 1.20211102.0)
+-    - abseil/container/flat_hash_map (~> 1.20211102.0)
+-    - abseil/memory (~> 1.20211102.0)
+-    - abseil/meta (~> 1.20211102.0)
+-    - abseil/strings/strings (~> 1.20211102.0)
+-    - abseil/time (~> 1.20211102.0)
+-    - abseil/types (~> 1.20211102.0)
+-    - FirebaseCore (~> 9.0)
+-    - "gRPC-C++ (~> 1.44.0)"
+-    - leveldb-library (~> 1.22)
+-    - nanopb (< 2.30910.0, >= 2.30908.0)
++  - firebase_core (2.4.0):
++    - Firebase/CoreOnly (= 10.3.0)
++    - Flutter
++  - FirebaseAuth (10.3.0):
++    - FirebaseCore (~> 10.0)
++    - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
++    - GoogleUtilities/Environment (~> 7.8)
++    - GTMSessionFetcher/Core (< 4.0, >= 2.1)
++  - FirebaseCore (10.3.0):
++    - FirebaseCoreInternal (~> 10.0)
++    - GoogleUtilities/Environment (~> 7.8)
++    - GoogleUtilities/Logger (~> 7.8)
++  - FirebaseCoreInternal (10.3.0):
++    - "GoogleUtilities/NSData+zlib (~> 7.8)"
++  - FirebaseFirestore (10.3.0):
++    - FirebaseFirestore/AutodetectLeveldb (= 10.3.0)
++  - FirebaseFirestore/AutodetectLeveldb (10.3.0):
++    - FirebaseFirestore/Base
++    - FirebaseFirestore/WithLeveldb
++  - FirebaseFirestore/Base (10.3.0)
++  - FirebaseFirestore/WithLeveldb (10.3.0):
++    - FirebaseFirestore/Base
+   - Flutter (1.0.0)
+-  - GoogleDataTransport (9.1.4):
+-    - GoogleUtilities/Environment (~> 7.7)
+-    - nanopb (< 2.30910.0, >= 2.30908.0)
+-    - PromisesObjC (< 3.0, >= 1.2)
+-  - GoogleUtilities/Environment (7.7.0):
++  - google_sign_in_ios (0.0.1):
++    - Flutter
++    - GoogleSignIn (~> 6.2)
++  - GoogleSignIn (6.2.4):
++    - AppAuth (~> 1.5)
++    - GTMAppAuth (~> 1.3)
++    - GTMSessionFetcher/Core (< 3.0, >= 1.1)
++  - GoogleUtilities/AppDelegateSwizzler (7.10.0):
++    - GoogleUtilities/Environment
++    - GoogleUtilities/Logger
++    - GoogleUtilities/Network
++  - GoogleUtilities/Environment (7.10.0):
+     - PromisesObjC (< 3.0, >= 1.2)
+-  - GoogleUtilities/Logger (7.7.0):
++  - GoogleUtilities/Logger (7.10.0):
+     - GoogleUtilities/Environment
+-  - "GoogleUtilities/NSData+zlib (7.7.0)"
+-  - "gRPC-C++ (1.44.0)":
+-    - "gRPC-C++/Implementation (= 1.44.0)"
+-    - "gRPC-C++/Interface (= 1.44.0)"
+-  - "gRPC-C++/Implementation (1.44.0)":
+-    - abseil/base/base (= 1.20211102.0)
+-    - abseil/base/core_headers (= 1.20211102.0)
+-    - abseil/container/flat_hash_map (= 1.20211102.0)
+-    - abseil/container/inlined_vector (= 1.20211102.0)
+-    - abseil/functional/bind_front (= 1.20211102.0)
+-    - abseil/hash/hash (= 1.20211102.0)
+-    - abseil/memory/memory (= 1.20211102.0)
+-    - abseil/random/random (= 1.20211102.0)
+-    - abseil/status/status (= 1.20211102.0)
+-    - abseil/status/statusor (= 1.20211102.0)
+-    - abseil/strings/cord (= 1.20211102.0)
+-    - abseil/strings/str_format (= 1.20211102.0)
+-    - abseil/strings/strings (= 1.20211102.0)
+-    - abseil/synchronization/synchronization (= 1.20211102.0)
+-    - abseil/time/time (= 1.20211102.0)
+-    - abseil/types/optional (= 1.20211102.0)
+-    - abseil/types/variant (= 1.20211102.0)
+-    - abseil/utility/utility (= 1.20211102.0)
+-    - "gRPC-C++/Interface (= 1.44.0)"
+-    - gRPC-Core (= 1.44.0)
+-  - "gRPC-C++/Interface (1.44.0)"
+-  - gRPC-Core (1.44.0):
+-    - gRPC-Core/Implementation (= 1.44.0)
+-    - gRPC-Core/Interface (= 1.44.0)
+-  - gRPC-Core/Implementation (1.44.0):
+-    - abseil/base/base (= 1.20211102.0)
+-    - abseil/base/core_headers (= 1.20211102.0)
+-    - abseil/container/flat_hash_map (= 1.20211102.0)
+-    - abseil/container/inlined_vector (= 1.20211102.0)
+-    - abseil/functional/bind_front (= 1.20211102.0)
+-    - abseil/hash/hash (= 1.20211102.0)
+-    - abseil/memory/memory (= 1.20211102.0)
+-    - abseil/random/random (= 1.20211102.0)
+-    - abseil/status/status (= 1.20211102.0)
+-    - abseil/status/statusor (= 1.20211102.0)
+-    - abseil/strings/cord (= 1.20211102.0)
+-    - abseil/strings/str_format (= 1.20211102.0)
+-    - abseil/strings/strings (= 1.20211102.0)
+-    - abseil/synchronization/synchronization (= 1.20211102.0)
+-    - abseil/time/time (= 1.20211102.0)
+-    - abseil/types/optional (= 1.20211102.0)
+-    - abseil/types/variant (= 1.20211102.0)
+-    - abseil/utility/utility (= 1.20211102.0)
+-    - BoringSSL-GRPC (= 0.0.24)
+-    - gRPC-Core/Interface (= 1.44.0)
+-    - Libuv-gRPC (= 0.0.10)
+-  - gRPC-Core/Interface (1.44.0)
+-  - leveldb-library (1.22.1)
+-  - Libuv-gRPC (0.0.10):
+-    - Libuv-gRPC/Implementation (= 0.0.10)
+-    - Libuv-gRPC/Interface (= 0.0.10)
+-  - Libuv-gRPC/Implementation (0.0.10):
+-    - Libuv-gRPC/Interface (= 0.0.10)
+-  - Libuv-gRPC/Interface (0.0.10)
++  - GoogleUtilities/Network (7.10.0):
++    - GoogleUtilities/Logger
++    - "GoogleUtilities/NSData+zlib"
++    - GoogleUtilities/Reachability
++  - "GoogleUtilities/NSData+zlib (7.10.0)"
++  - GoogleUtilities/Reachability (7.10.0):
++    - GoogleUtilities/Logger
++  - GTMAppAuth (1.3.1):
++    - AppAuth/Core (~> 1.6)
++    - GTMSessionFetcher/Core (< 3.0, >= 1.5)
++  - GTMSessionFetcher/Core (2.3.0)
+   - nanopb (2.30909.0):
+     - nanopb/decode (= 2.30909.0)
+     - nanopb/encode (= 2.30909.0)
+   - nanopb/decode (2.30909.0)
+   - nanopb/encode (2.30909.0)
+   - PromisesObjC (2.1.1)
++  - sign_in_with_apple (0.0.1):
++    - Flutter
+ 
+ DEPENDENCIES:
+   - cloud_firestore (from `.symlinks/plugins/cloud_firestore/ios`)
++  - firebase_auth (from `.symlinks/plugins/firebase_auth/ios`)
+   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
++  - FirebaseFirestore (from `https://github.com/invertase/firestore-ios-sdk-frameworks.git`, tag `10.3.0`)
+   - Flutter (from `Flutter`)
++  - google_sign_in_ios (from `.symlinks/plugins/google_sign_in_ios/ios`)
++  - sign_in_with_apple (from `.symlinks/plugins/sign_in_with_apple/ios`)
+ 
+ SPEC REPOS:
+   trunk:
+-    - abseil
+-    - BoringSSL-GRPC
++    - AppAuth
+     - Firebase
++    - FirebaseAuth
+     - FirebaseCore
+-    - FirebaseCoreDiagnostics
+     - FirebaseCoreInternal
+-    - FirebaseFirestore
+-    - GoogleDataTransport
++    - GoogleSignIn
+     - GoogleUtilities
+-    - "gRPC-C++"
+-    - gRPC-Core
+-    - leveldb-library
+-    - Libuv-gRPC
++    - GTMAppAuth
++    - GTMSessionFetcher
+     - nanopb
+     - PromisesObjC
+ 
+ EXTERNAL SOURCES:
+   cloud_firestore:
+     :path: ".symlinks/plugins/cloud_firestore/ios"
++  firebase_auth:
++    :path: ".symlinks/plugins/firebase_auth/ios"
+   firebase_core:
+     :path: ".symlinks/plugins/firebase_core/ios"
++  FirebaseFirestore:
++    :git: https://github.com/invertase/firestore-ios-sdk-frameworks.git
++    :tag: 10.3.0
+   Flutter:
+     :path: Flutter
++  google_sign_in_ios:
++    :path: ".symlinks/plugins/google_sign_in_ios/ios"
++  sign_in_with_apple:
++    :path: ".symlinks/plugins/sign_in_with_apple/ios"
++
++CHECKOUT OPTIONS:
++  FirebaseFirestore:
++    :git: https://github.com/invertase/firestore-ios-sdk-frameworks.git
++    :tag: 10.3.0
+ 
+ SPEC CHECKSUMS:
+-  abseil: ebe5b5529fb05d93a8bdb7951607be08b7fa71bc
+-  BoringSSL-GRPC: 3175b25143e648463a56daeaaa499c6cb86dad33
+-  cloud_firestore: f08f98f6bf77dc48c34ae77e2b31d5edcb00f190
+-  Firebase: 4ba896cb8e5105d4b9e247e1c1b6222b548df55a
+-  firebase_core: 9e09bbfbf5467e459822850732f5fb648f5b1927
+-  FirebaseCore: 0e27f2a15d8f7b7ef11e7d93e23b1cbab55d748c
+-  FirebaseCoreDiagnostics: ad3f6c68b7c5b63b7cf15b0785d7137f05f32268
+-  FirebaseCoreInternal: cb966328b6985dbd6f535e1461291063e1c4a00f
+-  FirebaseFirestore: de27d96de10596ebc114adf25c6aa7d36dd91f2f
+-  Flutter: 50d75fe2f02b26cc09d224853bb45737f8b3214a
+-  GoogleDataTransport: 5fffe35792f8b96ec8d6775f5eccd83c998d5a3b
+-  GoogleUtilities: e0913149f6b0625b553d70dae12b49fc62914fd1
+-  "gRPC-C++": 9675f953ace2b3de7c506039d77be1f2e77a8db2
+-  gRPC-Core: 943e491cb0d45598b0b0eb9e910c88080369290b
+-  leveldb-library: 50c7b45cbd7bf543c81a468fe557a16ae3db8729
+-  Libuv-gRPC: 55e51798e14ef436ad9bc45d12d43b77b49df378
++  AppAuth: 8fca6b5563a5baef2c04bee27538025e4ceb2add
++  cloud_firestore: e6d4d16c6af7ecebd7254f12c3c1bb9bc87e5aca
++  Firebase: f92fc551ead69c94168d36c2b26188263860acd9
++  firebase_auth: 7ad9a5c696d502d5bda096ea8dc996761456dc7d
++  firebase_core: 6f2f753e316765799d88568232ed59e300ff53db
++  FirebaseAuth: 0e415d29d846c1dce2fb641e46f35e9888d9bec6
++  FirebaseCore: 988754646ab3bd4bdcb740f1bfe26b9f6c0d5f2a
++  FirebaseCoreInternal: 29b76f784d607df8b2a1259d73c3f04f1210137b
++  FirebaseFirestore: ef5e47e1489c03dc978f94e8b43ad5f67a77df8c
++  Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
++  google_sign_in_ios: 4f85eb9f937450765c8573bb85fd8cd6a5af675c
++  GoogleSignIn: 5651ce3a61e56ca864160e79b484cd9ed3f49b7a
++  GoogleUtilities: bad72cb363809015b1f7f19beb1f1cd23c589f95
++  GTMAppAuth: 0ff230db599948a9ad7470ca667337803b3fc4dd
++  GTMSessionFetcher: 3a63d75eecd6aa32c2fc79f578064e1214dfdec2
+   nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
+   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
++  sign_in_with_apple: f3bf75217ea4c2c8b91823f225d70230119b8440
+ 
+-PODFILE CHECKSUM: 75743c156452b9c96550913354e2260fd05753e1
++PODFILE CHECKSUM: 8e497781a1de7700b5e7984d5e56cc60ab1b5ed1
+ 
+ COCOAPODS: 1.11.3
+diff --git a/flutter/mood_journal_flutter/ios/Runner.xcodeproj/project.pbxproj b/flutter/mood_journal_flutter/ios/Runner.xcodeproj/project.pbxproj
+index 0c8f3af..0ae3acc 100644
+--- a/flutter/mood_journal_flutter/ios/Runner.xcodeproj/project.pbxproj
++++ b/flutter/mood_journal_flutter/ios/Runner.xcodeproj/project.pbxproj
+@@ -3,7 +3,7 @@
+ 	archiveVersion = 1;
+ 	classes = {
+ 	};
+-	objectVersion = 50;
++	objectVersion = 51;
+ 	objects = {
+ 
+ /* Begin PBXBuildFile section */
+@@ -14,6 +14,7 @@
+ 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
+ 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
+ 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
++		F84B395C2971AFC4009DBA2A /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = F84B395B2971AFC3009DBA2A /* GoogleService-Info.plist */; };
+ /* End PBXBuildFile section */
+ 
+ /* Begin PBXCopyFilesBuildPhase section */
+@@ -47,6 +48,7 @@
+ 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+ 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+ 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
++		F84B395B2971AFC3009DBA2A /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = "GoogleService-Info.plist"; path = "Runner/GoogleService-Info.plist"; sourceTree = "<group>"; };
+ /* End PBXFileReference section */
+ 
+ /* Begin PBXFrameworksBuildPhase section */
+@@ -75,6 +77,7 @@
+ 		97C146E51CF9000F007C117D = {
+ 			isa = PBXGroup;
+ 			children = (
++				F84B395B2971AFC3009DBA2A /* GoogleService-Info.plist */,
+ 				9740EEB11CF90186004384FC /* Flutter */,
+ 				97C146F01CF9000F007C117D /* Runner */,
+ 				97C146EF1CF9000F007C117D /* Products */,
+@@ -113,7 +116,6 @@
+ 				283F8F1539CA89F9A5D615ED /* Pods-Runner.release.xcconfig */,
+ 				7C5BB41416C76CA21D7A714D /* Pods-Runner.profile.xcconfig */,
+ 			);
+-			name = Pods;
+ 			path = Pods;
+ 			sourceTree = "<group>";
+ 		};
+@@ -140,6 +142,7 @@
+ 				9705A1C41CF9048500538489 /* Embed Frameworks */,
+ 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
+ 				314F66C61E094758BEB18AAC /* [CP] Embed Pods Frameworks */,
++				6905989959B5574087A635F0 /* [CP] Copy Pods Resources */,
+ 			);
+ 			buildRules = (
+ 			);
+@@ -190,6 +193,7 @@
+ 			files = (
+ 				97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */,
+ 				3B3967161E833CAA004F5970 /* AppFrameworkInfo.plist in Resources */,
++				F84B395C2971AFC4009DBA2A /* GoogleService-Info.plist in Resources */,
+ 				97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */,
+ 				97C146FC1CF9000F007C117D /* Main.storyboard in Resources */,
+ 			);
+@@ -251,6 +255,23 @@
+ 			shellPath = /bin/sh;
+ 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
+ 		};
++		6905989959B5574087A635F0 /* [CP] Copy Pods Resources */ = {
++			isa = PBXShellScriptBuildPhase;
++			buildActionMask = 2147483647;
++			files = (
++			);
++			inputFileListPaths = (
++				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-input-files.xcfilelist",
++			);
++			name = "[CP] Copy Pods Resources";
++			outputFileListPaths = (
++				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources-${CONFIGURATION}-output-files.xcfilelist",
++			);
++			runOnlyForDeploymentPostprocessing = 0;
++			shellPath = /bin/sh;
++			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-resources.sh\"\n";
++			showEnvVarsInLog = 0;
++		};
+ 		9740EEB61CF901F6004384FC /* Run Script */ = {
+ 			isa = PBXShellScriptBuildPhase;
+ 			buildActionMask = 2147483647;
+@@ -340,7 +361,7 @@
+ 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+ 				GCC_WARN_UNUSED_FUNCTION = YES;
+ 				GCC_WARN_UNUSED_VARIABLE = YES;
+-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
++				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+ 				MTL_ENABLE_DEBUG_INFO = NO;
+ 				SDKROOT = iphoneos;
+ 				SUPPORTED_PLATFORMS = iphoneos;
+@@ -417,7 +438,7 @@
+ 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+ 				GCC_WARN_UNUSED_FUNCTION = YES;
+ 				GCC_WARN_UNUSED_VARIABLE = YES;
+-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
++				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+ 				MTL_ENABLE_DEBUG_INFO = YES;
+ 				ONLY_ACTIVE_ARCH = YES;
+ 				SDKROOT = iphoneos;
+@@ -466,7 +487,7 @@
+ 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+ 				GCC_WARN_UNUSED_FUNCTION = YES;
+ 				GCC_WARN_UNUSED_VARIABLE = YES;
+-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
++				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+ 				MTL_ENABLE_DEBUG_INFO = NO;
+ 				SDKROOT = iphoneos;
+ 				SUPPORTED_PLATFORMS = iphoneos;
+diff --git a/flutter/mood_journal_flutter/ios/Runner/Info.plist b/flutter/mood_journal_flutter/ios/Runner/Info.plist
+index 163fdb8..fdd52ea 100644
+--- a/flutter/mood_journal_flutter/ios/Runner/Info.plist
++++ b/flutter/mood_journal_flutter/ios/Runner/Info.plist
+@@ -43,5 +43,20 @@
+ 	<false/>
+ 	<key>CADisableMinimumFrameDurationOnPhone</key>
+ 	<true/>
++	<!-- Google Sign-in Section -->
++<key>CFBundleURLTypes</key>
++<array>
++	<dict>
++		<key>CFBundleTypeRole</key>
++		<string>Editor</string>
++		<key>CFBundleURLSchemes</key>
++		<array>
++			<!-- TODO Replace this value: -->
++			<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
++			<string>com.googleusercontent.apps.150797805191-f2o8ujbbekfpgecrmlbhiblsre51fbde</string>
++		</array>
++	</dict>
++</array>
++<!-- End of the Google Sign-in Section -->
+ </dict>
+ </plist>
+diff --git a/flutter/mood_journal_flutter/lib/firebase_options.dart b/flutter/mood_journal_flutter/lib/firebase_options.dart
+index 5c1cf57..d0b8845 100644
+--- a/flutter/mood_journal_flutter/lib/firebase_options.dart
++++ b/flutter/mood_journal_flutter/lib/firebase_options.dart
+@@ -17,7 +17,10 @@ import 'package:flutter/foundation.dart'
+ class DefaultFirebaseOptions {
+   static FirebaseOptions get currentPlatform {
+     if (kIsWeb) {
+-      return web;
++      throw UnsupportedError(
++        'DefaultFirebaseOptions have not been configured for web - '
++        'you can reconfigure this by running the FlutterFire CLI again.',
++      );
+     }
+     switch (defaultTargetPlatform) {
+       case TargetPlatform.android:
+@@ -46,16 +49,6 @@ class DefaultFirebaseOptions {
+     }
+   }
+ 
+-  static const FirebaseOptions web = FirebaseOptions(
+-    apiKey: 'AIzaSyAAYGbioRqvtN-beW8EJRXmOj3hK19nEU0',
+-    appId: '1:150797805191:web:480baf5410ddcb9b46ba22',
+-    messagingSenderId: '150797805191',
+-    projectId: 'mood-journal-flutter',
+-    authDomain: 'mood-journal-flutter.firebaseapp.com',
+-    storageBucket: 'mood-journal-flutter.appspot.com',
+-    measurementId: 'G-7ZE4LTR0PV',
+-  );
+-
+   static const FirebaseOptions android = FirebaseOptions(
+     apiKey: 'AIzaSyAtkuoZQyLtggxWqdcH3OpJID-zq1fCxOo',
+     appId: '1:150797805191:android:21b17d412462f47d46ba22',
+diff --git a/flutter/mood_journal_flutter/lib/main.dart b/flutter/mood_journal_flutter/lib/main.dart
+index 462015a..0698a78 100644
+--- a/flutter/mood_journal_flutter/lib/main.dart
++++ b/flutter/mood_journal_flutter/lib/main.dart
+@@ -1,120 +1,27 @@
+ import 'package:flutter/material.dart';
++import 'package:mood_journal_flutter/home/home.dart';
++
++// Import the firebase_core plugin
+ import 'package:firebase_core/firebase_core.dart';
++import 'package:mood_journal_flutter/routes.dart';
++import 'package:mood_journal_flutter/shared/bottom_nav.dart';
+ import 'firebase_options.dart';
+ 
+-Future<void> main() async {
++void main() async {
+   WidgetsFlutterBinding.ensureInitialized();
+   await Firebase.initializeApp(
+     options: DefaultFirebaseOptions.currentPlatform,
+   );
+-
+-  runApp(MyApp());
+-}
+-
+-class MyApp extends StatelessWidget {
+-  // This widget is the root of your application.
+-  @override
+-  Widget build(BuildContext context) {
+-    return MaterialApp(
+-      title: 'Flutter Demo',
+-      theme: ThemeData(
+-        // This is the theme of your application.
+-        //
+-        // Try running your application with "flutter run". You'll see the
+-        // application has a blue toolbar. Then, without quitting the app, try
+-        // changing the primarySwatch below to Colors.green and then invoke
+-        // "hot reload" (press "r" in the console where you ran "flutter run",
+-        // or simply save your changes to "hot reload" in a Flutter IDE).
+-        // Notice that the counter didn't reset back to zero; the application
+-        // is not restarted.
+-        primarySwatch: Colors.blue,
+-      ),
+-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+-    );
+-  }
++  runApp(App());
+ }
+ 
+-class MyHomePage extends StatefulWidget {
+-  MyHomePage({Key? key, required this.title}) : super(key: key);
+-
+-  // This widget is the home page of your application. It is stateful, meaning
+-  // that it has a State object (defined below) that contains fields that affect
+-  // how it looks.
+-
+-  // This class is the configuration for the state. It holds the values (in this
+-  // case the title) provided by the parent (in this case the App widget) and
+-  // used by the build method of the State. Fields in a Widget subclass are
+-  // always marked "final".
+-
+-  final String title;
+-
+-  @override
+-  _MyHomePageState createState() => _MyHomePageState();
+-}
+-
+-class _MyHomePageState extends State<MyHomePage> {
+-  int _counter = 0;
+-
+-  void _incrementCounter() {
+-    setState(() {
+-      // This call to setState tells the Flutter framework that something has
+-      // changed in this State, which causes it to rerun the build method below
+-      // so that the display can reflect the updated values. If we changed
+-      // _counter without calling setState(), then the build method would not be
+-      // called again, and so nothing would appear to happen.
+-      _counter++;
+-    });
+-  }
++class App extends StatelessWidget {
++  const App({super.key});
+ 
+   @override
+   Widget build(BuildContext context) {
+-    // This method is rerun every time setState is called, for instance as done
+-    // by the _incrementCounter method above.
+-    //
+-    // The Flutter framework has been optimized to make rerunning build methods
+-    // fast, so that you can just rebuild anything that needs updating rather
+-    // than having to individually change instances of widgets.
+-    return Scaffold(
+-      appBar: AppBar(
+-        // Here we take the value from the MyHomePage object that was created by
+-        // the App.build method, and use it to set our appbar title.
+-        title: Text(widget.title),
+-      ),
+-      body: Center(
+-        // Center is a layout widget. It takes a single child and positions it
+-        // in the middle of the parent.
+-        child: Column(
+-          // Column is also a layout widget. It takes a list of children and
+-          // arranges them vertically. By default, it sizes itself to fit its
+-          // children horizontally, and tries to be as tall as its parent.
+-          //
+-          // Invoke "debug painting" (press "p" in the console, choose the
+-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
+-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
+-          // to see the wireframe for each widget.
+-          //
+-          // Column has various properties to control how it sizes itself and
+-          // how it positions its children. Here we use mainAxisAlignment to
+-          // center the children vertically; the main axis here is the vertical
+-          // axis because Columns are vertical (the cross axis would be
+-          // horizontal).
+-          mainAxisAlignment: MainAxisAlignment.center,
+-          children: <Widget>[
+-            Text(
+-              'You have pushed the button this many times:',
+-            ),
+-            Text(
+-              '$_counter',
+-              style: Theme.of(context).textTheme.headline4,
+-            ),
+-          ],
+-        ),
+-      ),
+-      floatingActionButton: FloatingActionButton(
+-        onPressed: _incrementCounter,
+-        tooltip: 'Increment',
+-        child: Icon(Icons.add),
+-      ), // This trailing comma makes auto-formatting nicer for build methods.
++    return MaterialApp(
++      routes: appRoutes,
+     );
+   }
+ }
+diff --git a/flutter/mood_journal_flutter/pubspec.lock b/flutter/mood_journal_flutter/pubspec.lock
+index 78c2fd7..566c189 100644
+--- a/flutter/mood_journal_flutter/pubspec.lock
++++ b/flutter/mood_journal_flutter/pubspec.lock
+@@ -1,13 +1,41 @@
+ # Generated by pub
+ # See https://dart.dev/tools/pub/glossary#lockfile
+ packages:
++  _fe_analyzer_shared:
++    dependency: transitive
++    description:
++      name: _fe_analyzer_shared
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "47.0.0"
++  _flutterfire_internals:
++    dependency: transitive
++    description:
++      name: _flutterfire_internals
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.0.11"
++  analyzer:
++    dependency: transitive
++    description:
++      name: analyzer
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "4.7.0"
++  args:
++    dependency: transitive
++    description:
++      name: args
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "2.3.1"
+   async:
+     dependency: transitive
+     description:
+       name: async
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "2.8.2"
++    version: "2.9.0"
+   boolean_selector:
+     dependency: transitive
+     description:
+@@ -15,48 +43,111 @@ packages:
+       url: "https://pub.dartlang.org"
+     source: hosted
+     version: "2.1.0"
++  build:
++    dependency: transitive
++    description:
++      name: build
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "2.3.1"
++  build_config:
++    dependency: transitive
++    description:
++      name: build_config
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.1.1"
++  build_daemon:
++    dependency: transitive
++    description:
++      name: build_daemon
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "3.1.0"
++  build_resolvers:
++    dependency: transitive
++    description:
++      name: build_resolvers
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "2.0.10"
++  build_runner:
++    dependency: "direct dev"
++    description:
++      name: build_runner
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "2.3.3"
++  build_runner_core:
++    dependency: transitive
++    description:
++      name: build_runner_core
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "7.2.7"
++  built_collection:
++    dependency: transitive
++    description:
++      name: built_collection
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "5.1.1"
++  built_value:
++    dependency: transitive
++    description:
++      name: built_value
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "8.4.2"
+   characters:
+     dependency: transitive
+     description:
+       name: characters
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.2.0"
+-  charcode:
++    version: "1.2.1"
++  checked_yaml:
+     dependency: transitive
+     description:
+-      name: charcode
++      name: checked_yaml
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.3.1"
++    version: "2.0.1"
+   clock:
+     dependency: transitive
+     description:
+       name: clock
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.1.0"
++    version: "1.1.1"
+   cloud_firestore:
+     dependency: "direct main"
+     description:
+       name: cloud_firestore
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "3.2.1"
++    version: "4.3.0"
+   cloud_firestore_platform_interface:
+     dependency: transitive
+     description:
+       name: cloud_firestore_platform_interface
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "5.5.10"
++    version: "5.10.0"
+   cloud_firestore_web:
+     dependency: transitive
+     description:
+       name: cloud_firestore_web
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "2.6.19"
++    version: "3.2.0"
++  code_builder:
++    dependency: transitive
++    description:
++      name: code_builder
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "4.4.0"
+   collection:
+     dependency: transitive
+     description:
+@@ -64,6 +155,20 @@ packages:
+       url: "https://pub.dartlang.org"
+     source: hosted
+     version: "1.16.0"
++  convert:
++    dependency: transitive
++    description:
++      name: convert
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "3.1.1"
++  crypto:
++    dependency: transitive
++    description:
++      name: crypto
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "3.0.2"
+   cupertino_icons:
+     dependency: "direct main"
+     description:
+@@ -71,34 +176,90 @@ packages:
+       url: "https://pub.dartlang.org"
+     source: hosted
+     version: "1.0.5"
++  dart_style:
++    dependency: transitive
++    description:
++      name: dart_style
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "2.2.4"
++  equatable:
++    dependency: transitive
++    description:
++      name: equatable
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "2.0.5"
+   fake_async:
+     dependency: transitive
+     description:
+       name: fake_async
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.3.0"
++    version: "1.3.1"
++  file:
++    dependency: transitive
++    description:
++      name: file
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "6.1.4"
++  firebase_auth:
++    dependency: "direct main"
++    description:
++      name: firebase_auth
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "4.2.3"
++  firebase_auth_platform_interface:
++    dependency: transitive
++    description:
++      name: firebase_auth_platform_interface
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "6.11.6"
++  firebase_auth_web:
++    dependency: transitive
++    description:
++      name: firebase_auth_web
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "5.2.3"
+   firebase_core:
+     dependency: "direct main"
+     description:
+       name: firebase_core
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.19.1"
++    version: "2.4.0"
+   firebase_core_platform_interface:
+     dependency: transitive
+     description:
+       name: firebase_core_platform_interface
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "4.4.3"
++    version: "4.5.2"
+   firebase_core_web:
+     dependency: transitive
+     description:
+       name: firebase_core_web
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.6.6"
++    version: "2.0.2"
++  fixnum:
++    dependency: transitive
++    description:
++      name: fixnum
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.0.1"
++  fl_chart:
++    dependency: "direct main"
++    description:
++      name: fl_chart
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "0.55.2"
+   flutter:
+     dependency: "direct main"
+     description: flutter
+@@ -114,6 +275,97 @@ packages:
+     description: flutter
+     source: sdk
+     version: "0.0.0"
++  font_awesome_flutter:
++    dependency: "direct main"
++    description:
++      name: font_awesome_flutter
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "10.2.1"
++  frontend_server_client:
++    dependency: transitive
++    description:
++      name: frontend_server_client
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "3.2.0"
++  glob:
++    dependency: transitive
++    description:
++      name: glob
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "2.1.1"
++  google_sign_in:
++    dependency: "direct main"
++    description:
++      name: google_sign_in
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "5.4.1"
++  google_sign_in_android:
++    dependency: transitive
++    description:
++      name: google_sign_in_android
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "6.1.1"
++  google_sign_in_ios:
++    dependency: transitive
++    description:
++      name: google_sign_in_ios
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "5.5.0"
++  google_sign_in_platform_interface:
++    dependency: transitive
++    description:
++      name: google_sign_in_platform_interface
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "2.3.0"
++  google_sign_in_web:
++    dependency: transitive
++    description:
++      name: google_sign_in_web
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "0.10.2"
++  graphs:
++    dependency: transitive
++    description:
++      name: graphs
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "2.2.0"
++  http_multi_server:
++    dependency: transitive
++    description:
++      name: http_multi_server
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "3.2.1"
++  http_parser:
++    dependency: transitive
++    description:
++      name: http_parser
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "4.0.1"
++  intl:
++    dependency: "direct main"
++    description:
++      name: intl
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "0.17.0"
++  io:
++    dependency: transitive
++    description:
++      name: io
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.0.3"
+   js:
+     dependency: transitive
+     description:
+@@ -121,53 +373,165 @@ packages:
+       url: "https://pub.dartlang.org"
+     source: hosted
+     version: "0.6.4"
++  json_annotation:
++    dependency: "direct main"
++    description:
++      name: json_annotation
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "4.7.0"
++  json_serializable:
++    dependency: "direct dev"
++    description:
++      name: json_serializable
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "6.5.4"
++  logging:
++    dependency: transitive
++    description:
++      name: logging
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.1.0"
+   matcher:
+     dependency: transitive
+     description:
+       name: matcher
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "0.12.11"
++    version: "0.12.12"
+   material_color_utilities:
+     dependency: transitive
+     description:
+       name: material_color_utilities
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "0.1.4"
++    version: "0.1.5"
+   meta:
+     dependency: transitive
+     description:
+       name: meta
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.7.0"
++    version: "1.8.0"
++  mime:
++    dependency: transitive
++    description:
++      name: mime
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.0.3"
++  package_config:
++    dependency: transitive
++    description:
++      name: package_config
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "2.1.0"
+   path:
+     dependency: transitive
+     description:
+       name: path
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.8.1"
++    version: "1.8.2"
+   plugin_platform_interface:
+     dependency: transitive
+     description:
+       name: plugin_platform_interface
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "2.1.2"
++    version: "2.1.3"
++  pool:
++    dependency: transitive
++    description:
++      name: pool
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.5.1"
++  pub_semver:
++    dependency: transitive
++    description:
++      name: pub_semver
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "2.1.3"
++  pubspec_parse:
++    dependency: transitive
++    description:
++      name: pubspec_parse
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.2.0"
++  quiver:
++    dependency: transitive
++    description:
++      name: quiver
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "3.1.0"
++  shelf:
++    dependency: transitive
++    description:
++      name: shelf
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.4.0"
++  shelf_web_socket:
++    dependency: transitive
++    description:
++      name: shelf_web_socket
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.0.3"
++  sign_in_with_apple:
++    dependency: "direct main"
++    description:
++      name: sign_in_with_apple
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "4.1.0"
++  sign_in_with_apple_platform_interface:
++    dependency: transitive
++    description:
++      name: sign_in_with_apple_platform_interface
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.0.0"
++  sign_in_with_apple_web:
++    dependency: transitive
++    description:
++      name: sign_in_with_apple_web
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.0.1"
+   sky_engine:
+     dependency: transitive
+     description: flutter
+     source: sdk
+     version: "0.0.99"
++  source_gen:
++    dependency: transitive
++    description:
++      name: source_gen
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.2.2"
++  source_helper:
++    dependency: transitive
++    description:
++      name: source_helper
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.3.2"
+   source_span:
+     dependency: transitive
+     description:
+       name: source_span
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.8.2"
++    version: "1.9.0"
+   stack_trace:
+     dependency: transitive
+     description:
+@@ -182,27 +546,48 @@ packages:
+       url: "https://pub.dartlang.org"
+     source: hosted
+     version: "2.1.0"
++  stream_transform:
++    dependency: transitive
++    description:
++      name: stream_transform
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "2.1.0"
+   string_scanner:
+     dependency: transitive
+     description:
+       name: string_scanner
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.1.0"
++    version: "1.1.1"
+   term_glyph:
+     dependency: transitive
+     description:
+       name: term_glyph
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "1.2.0"
++    version: "1.2.1"
+   test_api:
+     dependency: transitive
+     description:
+       name: test_api
+       url: "https://pub.dartlang.org"
+     source: hosted
+-    version: "0.4.9"
++    version: "0.4.12"
++  timing:
++    dependency: transitive
++    description:
++      name: timing
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.0.0"
++  typed_data:
++    dependency: transitive
++    description:
++      name: typed_data
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.3.1"
+   vector_math:
+     dependency: transitive
+     description:
+@@ -210,6 +595,27 @@ packages:
+       url: "https://pub.dartlang.org"
+     source: hosted
+     version: "2.1.2"
++  watcher:
++    dependency: transitive
++    description:
++      name: watcher
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "1.0.2"
++  web_socket_channel:
++    dependency: transitive
++    description:
++      name: web_socket_channel
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "2.2.0"
++  yaml:
++    dependency: transitive
++    description:
++      name: yaml
++      url: "https://pub.dartlang.org"
++    source: hosted
++    version: "3.1.1"
+ sdks:
+-  dart: ">=2.17.0-0 <3.0.0"
+-  flutter: ">=1.12.13+hotfix.5"
++  dart: ">=2.18.0 <3.0.0"
++  flutter: ">=2.10.0"
+diff --git a/flutter/mood_journal_flutter/pubspec.yaml b/flutter/mood_journal_flutter/pubspec.yaml
+index 93d87a7..95440fe 100644
+--- a/flutter/mood_journal_flutter/pubspec.yaml
++++ b/flutter/mood_journal_flutter/pubspec.yaml
+@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+ version: 1.0.0+1
+ 
+ environment:
+-  sdk: ">=2.12.0 <3.0.0"
++  sdk: ">=2.17.0 <3.0.0"
+ 
+ dependencies:
+   flutter:
+@@ -28,12 +28,22 @@ dependencies:
+   # The following adds the Cupertino Icons font to your application.
+   # Use with the CupertinoIcons class for iOS style icons.
+   cupertino_icons: ^1.0.2
+-  firebase_core: ^1.19.1
+-  cloud_firestore: ^3.2.1
++  firebase_core: ^2.4.0
++  cloud_firestore: ^4.3.0
++  firebase_auth: ^4.2.3
++  google_sign_in: ^5.4.1
++  sign_in_with_apple: ^4.1.0
++  font_awesome_flutter:
++  json_annotation: ^4.7.0
++  intl: ^0.17.0
++  fl_chart: ^0.55.2
+ 
+ dev_dependencies:
+   flutter_test:
+     sdk: flutter
++  
++  build_runner: ^2.3.3
++  json_serializable: ^6.5.4
+ 
+ # For information on the generic Dart part of this file, see the
+ # following page: https://dart.dev/tools/pub/pubspec
+diff --git a/flutter/mood_journal_flutter/test/widget_test.dart b/flutter/mood_journal_flutter/test/widget_test.dart
+index 41a3396..2c806fa 100644
+--- a/flutter/mood_journal_flutter/test/widget_test.dart
++++ b/flutter/mood_journal_flutter/test/widget_test.dart
+@@ -13,7 +13,7 @@ import 'package:mood_journal_flutter/main.dart';
+ void main() {
+   testWidgets('Counter increments smoke test', (WidgetTester tester) async {
+     // Build our app and trigger a frame.
+-    await tester.pumpWidget(MyApp());
++    await tester.pumpWidget(App());
+ 
+     // Verify that our counter starts at 0.
+     expect(find.text('0'), findsOneWidget);

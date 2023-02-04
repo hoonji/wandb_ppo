@@ -1,0 +1,42 @@
+{
+    "os": "macOS-13.1-x86_64-i386-64bit",
+    "python": "3.10.9",
+    "heartbeatAt": "2023-02-02T15:42:07.463307",
+    "startedAt": "2023-02-02T15:42:05.875825",
+    "docker": null,
+    "cuda": null,
+    "args": null,
+    "state": "running",
+    "program": "/Users/hoonji/Workspace/rlnd/wandb_ppo/ppo.py",
+    "codePath": "rlnd/wandb_ppo/ppo.py",
+    "git": {
+        "remote": "https://github.com/hoonji/Workspace.git",
+        "commit": "a19c383a2ddf0cda602130adde6f63a6aa08fd37"
+    },
+    "email": "hoonji126@gmail.com",
+    "root": "/Users/hoonji/Workspace",
+    "host": "Jihoons-MacBook-Pro.local",
+    "username": "hoonji",
+    "executable": "/Users/hoonji/Workspace/rlnd/wandb_ppo/venv/bin/python",
+    "cpu_count": 6,
+    "cpu_count_logical": 12,
+    "cpu_freq": {
+        "current": 2900,
+        "min": 2900,
+        "max": 2900
+    },
+    "cpu_freq_per_core": [
+        {
+            "current": 2900,
+            "min": 2900,
+            "max": 2900
+        }
+    ],
+    "disk": {
+        "total": 840.0536880493164,
+        "used": 8.258358001708984
+    },
+    "memory": {
+        "total": 32.0
+    }
+}

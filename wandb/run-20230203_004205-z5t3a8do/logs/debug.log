@@ -1,0 +1,31 @@
+2023-02-03 00:42:05,878 INFO    MainThread:77268 [wandb_setup.py:_flush():68] Configure stats pid to 77268
+2023-02-03 00:42:05,878 INFO    MainThread:77268 [wandb_setup.py:_flush():68] Loading settings from /Users/hoonji/.config/wandb/settings
+2023-02-03 00:42:05,878 INFO    MainThread:77268 [wandb_setup.py:_flush():68] Loading settings from /Users/hoonji/Workspace/rlnd/wandb_ppo/wandb/settings
+2023-02-03 00:42:05,878 INFO    MainThread:77268 [wandb_setup.py:_flush():68] Loading settings from environment variables: {'_require_service': 'True'}
+2023-02-03 00:42:05,879 INFO    MainThread:77268 [wandb_setup.py:_flush():68] Inferring run settings from compute environment: {'program_relpath': 'rlnd/wandb_ppo/ppo.py', 'program': '/Users/hoonji/Workspace/rlnd/wandb_ppo/ppo.py'}
+2023-02-03 00:42:05,879 INFO    MainThread:77268 [wandb_setup.py:_flush():68] Applying login settings: {'api_key': '***REDACTED***'}
+2023-02-03 00:42:05,879 INFO    MainThread:77268 [wandb_init.py:_log_setup():478] Logging user logs to /Users/hoonji/Workspace/rlnd/wandb_ppo/wandb/run-20230203_004205-z5t3a8do/logs/debug.log
+2023-02-03 00:42:05,879 INFO    MainThread:77268 [wandb_init.py:_log_setup():479] Logging internal logs to /Users/hoonji/Workspace/rlnd/wandb_ppo/wandb/run-20230203_004205-z5t3a8do/logs/debug-internal.log
+2023-02-03 00:42:05,879 INFO    MainThread:77268 [wandb_init.py:_jupyter_setup():428] configuring jupyter hooks <wandb.sdk.wandb_init._WandbInit object at 0x10375e320>
+2023-02-03 00:42:05,879 INFO    MainThread:77268 [wandb_init.py:init():518] calling init triggers
+2023-02-03 00:42:05,879 INFO    MainThread:77268 [wandb_init.py:init():521] wandb.init called with sweep_config: {}
+config: {'exp_name': 'ppo', 'gym_id': 'CartPole-v1', 'learning_rate': 0.00025, 'seed': 1, 'total_timesteps': 25000, 'torch_deterministic': True, 'cuda': True, 'track': True, 'wandb_project_name': 'ppo-implementation-details', 'wandb_entity': None}
+2023-02-03 00:42:05,879 INFO    MainThread:77268 [wandb_init.py:init():571] starting backend
+2023-02-03 00:42:05,880 INFO    MainThread:77268 [wandb_init.py:init():575] setting up manager
+2023-02-03 00:42:05,889 INFO    MainThread:77268 [backend.py:_multiprocessing_setup():106] multiprocessing start_methods=spawn,fork,forkserver, using: spawn
+2023-02-03 00:42:05,891 INFO    MainThread:77268 [wandb_init.py:init():582] backend started and connected
+2023-02-03 00:42:05,894 INFO    MainThread:77268 [wandb_run.py:_label_probe_notebook():1202] probe notebook
+2023-02-03 00:42:05,894 INFO    MainThread:77268 [wandb_run.py:_label_probe_notebook():1212] Unable to probe notebook: 'NoneType' object has no attribute 'get'
+2023-02-03 00:42:05,894 INFO    MainThread:77268 [wandb_init.py:init():670] updated telemetry
+2023-02-03 00:42:05,930 INFO    MainThread:77268 [wandb_init.py:init():710] communicating run to backend with 60.0 second timeout
+2023-02-03 00:42:07,387 INFO    MainThread:77268 [wandb_run.py:_on_init():2121] communicating current version
+2023-02-03 00:42:07,430 INFO    MainThread:77268 [wandb_run.py:_on_init():2125] got version response 
+2023-02-03 00:42:07,430 INFO    MainThread:77268 [wandb_init.py:init():758] starting run threads in backend
+2023-02-03 00:42:07,689 INFO    MainThread:77268 [wandb_run.py:_console_start():2101] atexit reg
+2023-02-03 00:42:07,689 INFO    MainThread:77268 [wandb_run.py:_redirect():1959] redirect: SettingsConsole.WRAP_RAW
+2023-02-03 00:42:07,690 INFO    MainThread:77268 [wandb_run.py:_redirect():2024] Wrapping output streams.
+2023-02-03 00:42:07,690 INFO    MainThread:77268 [wandb_run.py:_redirect():2046] Redirects installed.
+2023-02-03 00:42:07,690 INFO    MainThread:77268 [wandb_init.py:init():798] run started, returning control to user process
+2023-02-03 00:42:07,691 INFO    MainThread:77268 [wandb_run.py:_tensorboard_callback():1385] tensorboard callback: runs/CartPole-v1__ppo__1__1675352475, True
+2023-02-03 00:42:07,740 INFO    MainThread:77268 [wandb_init.py:_pause_backend():391] pausing backend
+2023-02-03 00:42:07,740 INFO    MainThread:77268 [jupyter.py:_save_ipynb():390] looking for notebook: None
