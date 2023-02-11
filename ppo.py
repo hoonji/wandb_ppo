@@ -110,3 +110,25 @@ if __name__ == "__main__":
       observation = env.reset()
       print(f"episodic return: {info['episode']}")
   env.close()
+
+  def make_env(gym_id):
+
+    def thunk():
+      env = gym.make(gym_id, render_mode="rgb_array")
+      env = gym.wrappers.RecordEpisodeStatistics(env)
+      env = gym.wrappers.RecordVideo(env,
+                                     'videos',
+                                     step_trigger=lambda t: t % 100 == 0)
+      return env
+
+    return thunk
+
+  envs = gym.vector.SyncVectorEnv([make_env(args.gym_id)])
+  observation = envs.reset()
+  for _ in range(200):
+    action = envs.action_space.sample()
+    observation, reward, done, truncated, info = envs.step(action)
+    if 'final_info' in info:
+      for item in info['final_info']:
+        if "episode" in item.keys():
+          print(f"episodic return {item['episode']['r']}")
