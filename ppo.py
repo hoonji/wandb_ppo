@@ -1,6 +1,9 @@
 import argparse
 import os
 import random
+import torch.nn as nn
+import torch.optim as optim
+from torch.distributions.categorical import Categorical
 import numpy as np
 import torch
 import gymnasium as gym
@@ -61,9 +64,93 @@ def parse_args():
                       type=str,
                       default=None,
                       help="the entity (team) of wandb's project")
+  parser.add_argument(
+      "--capture-video",
+      type=lambda x: bool(strtobool(x)),
+      default=False,
+      nargs="?",
+      const=True,
+      help=
+      "weather to capture videos of the agent performances (check out `videos` folder)"
+  )
+  parser.add_argument("--num-envs",
+                      type=int,
+                      default=4,
+                      help="the number of parallel game environments")
+  parser.add_argument(
+      "--num-steps",
+      type=int,
+      default=128,
+      help="the number of steps to run in each environment per policy rollout")
+  parser.add_argument(
+      "--anneal-lr",
+      type=lambda x: bool(strtobool(x)),
+      default=True,
+      nargs="?",
+      const=True,
+      help="Toggle learning rate annealing for policy and value networks")
 
   args = parser.parse_args()
+  args.batch_size = int(args.num_envs * args.num_steps)
   return args
+
+
+def make_env(gym_id, seed, idx, capture_video, run_name):
+
+  def thunk():
+    env = gym.make(gym_id, render_mode="rgb_array")
+    env = gym.wrappers.RecordEpisodeStatistics(env)
+    if capture_video:
+      if idx == 0:
+        env = gym.wrappers.RecordVideo(env,
+                                       'videos/{run_name}',
+                                       step_trigger=lambda t: t % 1000 == 0)
+    env.np_random = np.random.default_rng(seed=seed)
+    env.action_space.seed(seed)
+    env.observation_space.seed(seed)
+    return env
+
+  return thunk
+
+
+def layer_init(layer, std=np.sqrt(2), bias_const=0.0):
+  torch.nn.init.orthogonal_(layer.weight, std)
+  torch.nn.init.constant_(layer.bias, bias_const)
+  return layer
+
+
+class Agent(nn.Module):
+
+  def __init__(self, envs):
+    super(Agent, self).__init__()
+    self.critic = nn.Sequential(
+        layer_init(
+            nn.Linear(
+                np.array(envs.single_observation_space.shape).prod(), 64)),
+        nn.Tanh(),
+        layer_init(nn.Linear(64, 64)),
+        nn.Tanh(),
+        layer_init(nn.Linear(64, 1), std=1.0),
+    )
+    self.actor = nn.Sequential(
+        layer_init(
+            nn.Linear(
+                np.array(envs.single_observation_space.shape).prod(), 64)),
+        nn.Tanh(),
+        layer_init(nn.Linear(64, 64)),
+        nn.Tanh(),
+        layer_init(nn.Linear(64, envs.single_action_space.n), std=0.01),
+    )
+
+  def get_value(self, x):
+    return self.critic(x)
+
+  def get_action_and_value(self, x, action=None):
+    logits = self.actor(x)
+    probs = Categorical(logits=logits)
+    if action is None:
+      action = probs.sample()
+    return action, probs.log_prob(action), probs.entropy(), self.critic(x)
 
 
 if __name__ == "__main__":
@@ -97,38 +184,63 @@ if __name__ == "__main__":
   device = torch.device(
       "cuda" if torch.cuda.is_available() and args.cuda else "cpu")
 
-  env = gym.make("CartPole-v1", render_mode="rgb_array")
-  env = gym.wrappers.RecordEpisodeStatistics(env)
-  env = gym.wrappers.RecordVideo(env,
-                                 'videos',
-                                 step_trigger=lambda t: t % 100 == 0)
-  observation = env.reset()
-  for _ in range(200):
-    action = env.action_space.sample()
-    observation, reward, done, truncated, info = env.step(action)
-    if done or truncated:
-      observation = env.reset()
-      print(f"episodic return: {info['episode']}")
-  env.close()
+  envs = gym.vector.SyncVectorEnv([
+      make_env(args.gym_id, args.seed + i, i, args.capture_video, run_name)
+      for i in range(args.num_envs)
+  ])
+  agent = Agent(envs).to(device)
+  print(agent)
+  optimizer = optim.Adam(agent.parameters(), lr=args.learning_rate, eps=1e-5)
 
-  def make_env(gym_id):
+  obs = torch.zeros((args.num_steps, args.num_envs) +
+                    envs.single_observation_space.shape).to(device)
+  actions = torch.zeros((args.num_steps, args.num_envs) +
+                        envs.single_action_space.shape).to(device)
+  logprobs = torch.zeros((args.num_steps, args.num_envs)).to(device)
+  rewards = torch.zeros((args.num_steps, args.num_envs)).to(device)
+  dones = torch.zeros((args.num_steps, args.num_envs)).to(device)
+  values = torch.zeros((args.num_steps, args.num_envs)).to(device)
 
-    def thunk():
-      env = gym.make(gym_id, render_mode="rgb_array")
-      env = gym.wrappers.RecordEpisodeStatistics(env)
-      env = gym.wrappers.RecordVideo(env,
-                                     'videos',
-                                     step_trigger=lambda t: t % 100 == 0)
-      return env
+  global_step = 0
+  start_time = time.time()
+  next_obs = torch.Tensor(envs.reset()[0]).to(device)
+  next_done = torch.zeros(args.num_envs).to(device)
+  num_updates = args.total_timesteps // args.batch_size
 
-    return thunk
+  for update in range(1, num_updates + 1):
+    # Annealing the rate if instructed to do so.
+    if args.anneal_lr:
+      frac = 1.0 - (update - 1.0) / num_updates
+      lrnow = frac * args.learning_rate
+      optimizer.param_groups[0]["lr"] = lrnow
 
-  envs = gym.vector.SyncVectorEnv([make_env(args.gym_id)])
-  observation = envs.reset()
-  for _ in range(200):
-    action = envs.action_space.sample()
-    observation, reward, done, truncated, info = envs.step(action)
-    if 'final_info' in info:
-      for item in info['final_info']:
-        if "episode" in item.keys():
-          print(f"episodic return {item['episode']['r']}")
+    for step in range(0, args.num_steps):
+      global_step += 1 * args.num_envs
+      obs[step] = next_obs
+      dones[step] = next_done
+
+      # ALGO LOGIC: action logic
+      with torch.no_grad():
+        action, logprob, _, value = agent.get_action_and_value(next_obs)
+        values[step] = value.flatten()
+      actions[step] = action
+      logprobs[step] = logprob
+
+      # TRY NOT TO MODIFY: execute the game and log data.
+      next_obs, reward, done, truncated, info = envs.step(action.cpu().numpy())
+      rewards[step] = torch.tensor(reward).to(device).view(-1)
+      next_obs, next_done = torch.Tensor(next_obs).to(device), torch.Tensor(
+          done).to(device)
+
+      if 'final_info' in info:
+        env_infos = info['final_info']
+        for env_info in env_infos:
+          if env_info and 'episode' in env_info:
+            print(
+                f"global_step={global_step}, episodic_return={env_info['episode']['r']}"
+            )
+            writer.add_scalar("charts/episodic_return",
+                              env_info["episode"]["r"], global_step)
+            writer.add_scalar("charts/episodic_length",
+                              env_info["episode"]["l"], global_step)
+            break
